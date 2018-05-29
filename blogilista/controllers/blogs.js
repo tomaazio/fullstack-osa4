@@ -10,22 +10,44 @@ const format = (blog) => {
   }
 }
 
-blogsRouter.get('/', (req, res) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      res.json(blogs.map(format))
-    })
+blogsRouter.get('/', async (req, res) => {
+  try {
+    const blogs = await Blog.find({})
+    res.json(blogs.map(format))
+  } catch (e) {
+    console.log(e)
+    res.status(404).end()
+  }
 })
 
-blogsRouter.post('/', (req, res) => {
-  const blog = new Blog(req.body)
+blogsRouter.get('/:id', async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id)
+    res.json(format(blog))
+  } catch (e) {
+    console.log(e)
+    res.status(400).send({ error: 'malformatted id' })
+  }
+})
 
-  blog
-    .save()
-    .then(result => {
-      res.status(201).json(result)
-    })
+blogsRouter.post('/', async (req, res) => {
+  try {
+    const newBlog = new Blog(req.body)
+    if (newBlog.title === undefined) {
+      return res.status(400).json({ error: 'title missing' })
+    }
+    if (newBlog.url === undefined) {
+      return res.status(400).json({ error: 'url missing' })
+    }
+    if (!newBlog.likes) {
+      newBlog.likes = 0
+    }
+    const savedBlog = await newBlog.save()
+    res.status(201).json(format(savedBlog))
+  } catch (e) {
+    console.log(e)
+    res.status(500).json({ error: 'something went wrong...' })
+  }
 })
 
 module.exports = blogsRouter

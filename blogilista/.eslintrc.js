@@ -1,7 +1,12 @@
 module.exports = {
     "env": {
         "es6": true,
-        "node": true
+        "node": true,
+        "jest": true
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 2017
     },
     "extends": "eslint:recommended",
     "rules": {
@@ -29,6 +34,6 @@ module.exports = {
         "arrow-spacing": [
             "error", { "before": true, "after": true }
         ],
-        "no-console": 0
+        "no-console": 0,
     }
 };
