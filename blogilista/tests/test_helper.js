@@ -1,6 +1,6 @@
-const listHelper = require('../utils/list_helper')
+const Blog = require('../models/blog')
 
-const blogs = [
+const initialBlogs = [
   {
     _id: '5a422a851b54a676234d17f7',
     title: 'React patterns',
@@ -52,20 +52,21 @@ const blogs = [
 ]
 
 
-describe('Total likes', () => {
-  test('of all blogs', () => {
-    const result = listHelper.totalLikes(blogs)
-    expect(result).toBe(66)
-  })
-})
+const format = (blog) => {
+  return {
+    title: blog.title,
+    author: blog.author,
+    url: blog.url,
+    likes: blog.likes,
+  }
+}
 
-describe('Favorite blog', () => {
-  test('of all blogs', () => {
-    const result = listHelper.favoriteBlog(blogs)
-    expect(result).toEqual(blogs[4])
-  })
-})
+
+const blogsInDb = async () => {
+  const blogs = await Blog.find({})
+  return blogs.map(format)
+}
 
 module.exports = {
-  blogs
+  initialBlogs, blogsInDb, format
 }
