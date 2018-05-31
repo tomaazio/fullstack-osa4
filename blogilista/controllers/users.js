@@ -6,6 +6,7 @@ usersRouter.get('/', async (req, res) => {
   try {
     const users = await User
       .find({})
+      .populate('blogs')
 
     res.json(users.map(User.format))
   } catch (e) {
